@@ -1,11 +1,34 @@
 import React, { useState } from 'react';
-import Plot from 'react-plotly.js';
+import axios from 'axios';
 
 function Page6() {
     const[message, setMessage] = useState('')
-    const handleSubmit = (event) => {
-        event.preventDefault(); // Prevent default form submission
-        setMessage('Data Upload Successful')
+    const[file,setFile] = useState(null)
+    const handleSubmit = async (event) => {
+        event.preventDefault();
+        setFile(event.target.files[0]);
+        if (!file) {
+            setMessage('Please upload File')
+        }
+
+        const formData = new FormData()
+        formData.append('file', file)
+
+        try {
+            const response = await fetch(' https://6hynxwo06g.execute-api.us-east-1.amazonaws.com/fileupload', {
+                method: 'POST',
+                body: formData
+            })
+            if (response.ok) {
+                setMessage('Data upload successful')
+            } else {
+                setMessage('Upload failed. Please Try Again')
+            }
+        }
+
+        catch (error) {
+            setMessage('An error occured during file upload.')
+        }
     }
     
     return (
