@@ -19,9 +19,6 @@ function Page6() {
         try {
             const response = await fetch('https://6hynxwo06g.execute-api.us-east-1.amazonaws.com/fileupload', {
                 method: 'POST',
-                headers: {
-                    'file-name': file.name
-                },
                 body: formData
             })
             if (response.ok) {
