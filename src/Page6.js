@@ -19,10 +19,7 @@ function Page6() {
         try {
             const response = await fetch('https://6hynxwo06g.execute-api.us-east-1.amazonaws.com/InitialDeployment/fileupload', {
                 method: 'POST',
-                headers: {
-                  'Content-Type': 'application/octet-stream', // or the specific MIME type of your file
-                },
-                body: file, // Directly sending the file
+                body: formData, // Directly sending the file
               });
             if (response.ok) {
                 setMessage('Data upload successful')
