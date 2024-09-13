@@ -8,7 +8,7 @@ function Page5() {
     const handleSubmit = async (event) => {
         event.preventDefault(); // Prevent default form submission
         try {
-            const response = await fetch('https://kr6a6rz6j2.execute-api.us-east-1.amazonaws.com/default/Recidivism', {
+            const response = await fetch('https://1pup6cqj6b.execute-api.us-east-1.amazonaws.com/Recidivism', {
                 method: 'GET'
             });
             if (response.ok) {
