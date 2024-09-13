@@ -17,10 +17,13 @@ function Page6() {
         formData.append('file', file)
 
         try {
-            const response = await fetch('https://6hynxwo06g.execute-api.us-east-1.amazonaws.com/fileupload', {
+            const response = await fetch('https://your-api-endpoint.example.com/upload', {
                 method: 'POST',
-                body: file,
-            })
+                headers: {
+                  'Content-Type': 'application/octet-stream', // or the specific MIME type of your file
+                },
+                body: file, // Directly sending the file
+              });
             if (response.ok) {
                 setMessage('Data upload successful')
             } else {
