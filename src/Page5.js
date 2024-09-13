@@ -5,27 +5,30 @@ function Page5() {
     const[report, setReport] = useState(`Report will be shown here`)
     const[graphData, setGraphData] = useState(null)
     const[placeHolder, setPlaceHolder] = useState('Graphed data will appear here')
-
-    const handleSubmit = (event) => {
+    const handleSubmit = async (event) => {
         event.preventDefault(); // Prevent default form submission
-        const data = [
-            {
-                type: 'pie',
-                labels: [], // Empty labels
-                values: [], // Empty values
-                marker: {
-                    colors: ['lightblue', 'lightgreen', 'lightcoral'], // Optional: Set colors for the pie slices
-                },
-            },
-        ];
+        try {
+            const response = await fetch('https://kr6a6rz6j2.execute-api.us-east-1.amazonaws.com/default/Recidivism', {
+                method: 'GET'
+            });
+            if (response.ok) {
+                const result = await response.json();
+                setGraphData({
+                    data: result.data, // Ensure this is an array
+                    layout: result.layout // Ensure this is an object
+                });
+                setReport(result.report)
+                setPlaceHolder('')
+            } else {
+                setReport('Analysis failed. Please try again.')
+            }
+        }
 
-        const layout = {
-            title: `Pie Chart for dates`,
-        };
-        setReport(`report data from`)
-        setGraphData({data, layout})
-        setPlaceHolder('')
+        catch (error) {
+            setReport('An error occured.')
+        }
     }
+    
     
     return (
         <div>
