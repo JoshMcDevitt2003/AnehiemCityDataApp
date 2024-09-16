@@ -14,8 +14,8 @@ function Page5() {
             if (response.ok) {
                 const result = await response.json();
                 setGraphData({
-                    data: result.data, // Ensure this is an array
-                    layout: result.layout // Ensure this is an object
+                    data: result.graphData.data, // Ensure this is an array
+                    layout: result.graphData.layout // Ensure this is an object
                 });
                 setReport(result.report)
                 setPlaceHolder('')
