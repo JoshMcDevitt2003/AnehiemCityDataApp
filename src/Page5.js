@@ -28,7 +28,7 @@ function Page5() {
             setReport('An error occured.')
         }
     }
-    
+    const lines = report.split('\n')
     
     return (
         <div>
@@ -57,7 +57,8 @@ function Page5() {
             <form onSubmit={handleSubmit}>
                 <button type="submit">Find Recidivism Trends</button>
             </form>
-            <p>{report}</p>
+            <p>{lines.map((line) => 
+                (<div>{line}</div>))}</p>
             <p>{placeHolder}</p>
             {graphData && (<Plot data={graphData.data} layout={graphData.layout} />)}
         </div>
