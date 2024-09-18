@@ -52,7 +52,7 @@ function Page5() {
         <div>
             <h1>Recidivism Trends</h1>
             <p id="description">
-            This page analyzes the entire dataset to generate a comprehensive report on recidivism, where each recidivist is defined to be a unique individuals returning to the Salvation Army.
+            This page analyzes the entire dataset to generate a comprehensive report on recidivism, where each recidivist is defined to be a unique individual returning shelter.
             </p>
             <form onSubmit={handleSubmit}>
                 <button type="submit">Find Recidivism Trends</button>

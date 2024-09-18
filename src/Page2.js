@@ -6,29 +6,33 @@ function Page2 (){
     const[graphData, setGraphData] = useState(null)
     const[placeHolder, setPlaceHolder] = useState('Graphed Data Will Appear Here')
 
-    const handleSubmit = (event) => {
+    const handleSubmit = async (event) => {
         event.preventDefault(); // Prevent default form submission
-        const minDate = event.target.min.value;
-        const maxDate = event.target.max.value;
-        const data = [
-            {
-                type: 'pie',
-                labels: [], // Empty labels
-                values: [], // Empty values
-                marker: {
-                    colors: ['lightblue', 'lightgreen', 'lightcoral'], // Optional: Set colors for the pie slices
-                },
-            },
-        ];
+        try {
+            const min = document.getElementById("min").value;
+            const max = document.getElementById("max").value;
+            const response = await fetch(`https://1pup6cqj6b.execute-api.us-east-1.amazonaws.com/los?min=${min}&max=${max}`, {
+                method: 'GET'
+            });
+            if (response.ok) {
+                const result = await response.json();
+                setGraphData({
+                    data: result.graphData.data, // Ensure this is an array
+                    layout: result.graphData.layout // Ensure this is an object
+                });
+                setReport(result.report)
+                setPlaceHolder('')
+            } else {
+                setReport('Analysis failed. Please try again.')
+            }
+        }
 
-        const layout = {
-            title: `Pie Chart for dates`,
-        };
-        setReport(`report data from ${minDate} to ${maxDate}`)
-        setGraphData({data, layout})
-        setPlaceHolder('')
+        catch (error) {
+            setReport('An error occured.')
+        }
     }
-
+    const lines = report.split('\n')
+    
     return (
         <div>
         <header>
@@ -62,7 +66,8 @@ function Page2 (){
                 <br /><br />
                 <button type="submit">Analyze Data</button>
             </form>
-            <p>{report}</p>
+            <p>{lines.map((line) => 
+                (<div>{line}</div>))}</p>
             <p>{placeHolder}</p>
             {graphData && (<Plot data={graphData.data} layout={graphData.layout} />)}
         </div>

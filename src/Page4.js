@@ -1,31 +1,34 @@
 import React, { useState } from 'react';
 import Plot from 'react-plotly.js';
 
-function Page4() {
+function Page4() {    
     const[report, setReport] = useState(`Report will be shown here`)
     const[graphData, setGraphData] = useState(null)
     const[placeHolder, setPlaceHolder] = useState('Graphed data will appear here')
-
-    const handleSubmit = (event) => {
+    const handleSubmit = async (event) => {
         event.preventDefault(); // Prevent default form submission
-        const data = [
-            {
-                type: 'pie',
-                labels: [], // Empty labels
-                values: [], // Empty values
-                marker: {
-                    colors: ['lightblue', 'lightgreen', 'lightcoral'], // Optional: Set colors for the pie slices
-                },
-            },
-        ];
+        try {
+            const response = await fetch('https://1pup6cqj6b.execute-api.us-east-1.amazonaws.com/housing', {
+                method: 'GET'
+            });
+            if (response.ok) {
+                const result = await response.json();
+                setGraphData({
+                    data: result.graphData.data, // Ensure this is an array
+                    layout: result.graphData.layout // Ensure this is an object
+                });
+                setReport(result.report)
+                setPlaceHolder('')
+            } else {
+                setReport('Analysis failed. Please try again.')
+            }
+        }
 
-        const layout = {
-            title: `Pie Chart for dates`,
-        };
-        setReport(`report data from`)
-        setGraphData({data, layout})
-        setPlaceHolder('')
+        catch (error) {
+            setReport('An error occured.')
+        }
     }
+    const lines = report.split('\n')
     
     return (
         <div>
@@ -54,7 +57,8 @@ function Page4() {
             <form onSubmit={handleSubmit}>
                 <button type="submit">Find Housing Trends</button>
             </form>
-            <p>{report}</p>
+            <p>{lines.map((line) => 
+                (<div>{line}</div>))}</p>
             <p>{placeHolder}</p>
             {graphData && (<Plot data={graphData.data} layout={graphData.layout} />)}
         </div>
