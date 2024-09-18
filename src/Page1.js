@@ -6,38 +6,31 @@ function Page1() {
     const[placeholder, setPlaceHolder] = useState('Graphed data will appear here');
     const[graphData, setGraphData] = useState(null);
 
-    const handleSubmit = (event) => {
+    const handleSubmit = async (event) => {
         event.preventDefault(); // Prevent default form submission
-        const minDate = event.target.min.value;
-        const maxDate = event.target.max.value;
-        const data = [
-            {
-                type: 'histogram',
-                x: [],  // Empty x-axis data
-                marker: {
-                    color: 'lightblue',
-                },
-            },
-        ];
+        try {
+            const min = document.getElementById("min").value;
+            const max = document.getElementById("max").value;
+            const response = await fetch(`https://1pup6cqj6b.execute-api.us-east-1.amazonaws.com/entryExit?min=${min}&max=${max}`);
+            if (response.ok) {
+                const result = await response.json();
+                setGraphData({
+                    data: result.graphData.data, // Ensure this is an array
+                    layout: result.graphData.layout // Ensure this is an object
+                });
+                setReport(result.report)
+                setPlaceHolder('')
+            } else {
+                setReport('Analysis failed. Please try again.')
+            }
+        }
 
-        const layout = {
-            title: `Graph for dates from ${minDate} to ${maxDate}`,
-            xaxis: {
-                title: 'X Axis',
-            },
-            yaxis: {
-                title: 'Y Axis',
-            },
-        };
-
-        // Example of how you might handle the form submission
-        // You would typically send a request to your backend here
-        // For demonstration, we'll just update the report state
-        setGraphData({ data, layout });
-        setPlaceHolder(``);
-        setReport(`The report from ${minDate} to ${maxDate}`)
-    };
-
+        catch (error) {
+            setReport('An error occured.')
+        }
+    }
+    const lines = report.split('\n')
+    
     return (
         <div>
             <header>
@@ -71,7 +64,8 @@ function Page1() {
                     <br /><br />
                     <button type="submit">Analyze Data</button>
                 </form>
-                <p>{report}</p>
+                <p>{lines.map((line) => 
+                (<div>{line}</div>))}</p>
                 <p>{placeholder}</p>
                 {graphData && (<Plot data={graphData.data} layout={graphData.layout} />)}
             </div>
